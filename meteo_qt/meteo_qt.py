@@ -24,7 +24,7 @@ import gc
 from PyQt5.QtCore import (
     PYQT_VERSION_STR, QT_VERSION_STR, QCoreApplication, QByteArray,
     QLibraryInfo, QLocale, QSettings, Qt, QThread, QTimer, QTranslator,
-    pyqtSignal, pyqtSlot, QTime
+    pyqtSignal, pyqtSlot, QTime, QSize
 )
 from PyQt5.QtGui import (
     QColor, QCursor, QFont, QIcon, QImage, QMovie, QPainter, QPixmap,
@@ -112,12 +112,12 @@ class SystemTrayIcon(QMainWindow):
         self.settingsAction = QAction(self.tr('&Settings'), self)
         self.aboutAction = QAction(self.tr('&About'), self)
         self.exitAction = QAction(self.tr('Exit'), self)
-        self.exitAction.setIcon(QIcon(':/exit'))
-        self.aboutAction.setIcon(QIcon(':/info'))
-        self.refreshAction.setIcon(QIcon(':/refresh'))
-        self.settingsAction.setIcon(QIcon(':/configure'))
-        self.tempCityAction.setIcon(QIcon(':/tempcity'))
-        self.citiesMenu.setIcon(QIcon(':/bookmarks'))
+        self.exitAction.setIcon(QIcon.fromTheme("application-exit", QIcon(':/exit')))
+        self.aboutAction.setIcon(QIcon.fromTheme("dialog-information", QIcon(':/info')))
+        self.refreshAction.setIcon(QIcon.fromTheme("view-refresh", QIcon(':/refresh')))
+        self.settingsAction.setIcon(QIcon.fromTheme("configure", QIcon(':/configure')))
+        self.tempCityAction.setIcon(QIcon.fromTheme("applications-geography", QIcon(':/tempcity')))
+        self.citiesMenu.setIcon(QIcon.fromTheme("user-bookmarks", QIcon(':/bookmarks')))
         self.menu.addAction(self.settingsAction)
         self.menu.addAction(self.refreshAction)
         self.menu.addMenu(self.citiesMenu)
@@ -132,7 +132,7 @@ class SystemTrayIcon(QMainWindow):
         self.systray = QSystemTrayIcon()
         self.systray.setContextMenu(self.menu)
         self.systray.activated.connect(self.activate)
-        self.systray.setIcon(QIcon(':/noicon'))
+        self.systray.setIcon(QIcon.fromTheme("image-loading", QIcon(':/noicon)')))
         self.systray.setToolTip(self.tr('Searching weather data...'))
 
         self.notification = ''
@@ -260,7 +260,7 @@ class SystemTrayIcon(QMainWindow):
             )
         self.wind_icon_label = QLabel()
         self.wind_icon_label.setAlignment(Qt.AlignLeft)
-        self.wind_icon = QPixmap(':/arrow')
+        self.wind_icon = QIcon.fromTheme("draw-arrow-down", QIcon(':/arrow')).pixmap(QSize(16, 16))
         self.wind_icon_direction()
         # Clouds
         self.clouds_label = QLabel(
@@ -1321,7 +1321,7 @@ class SystemTrayIcon(QMainWindow):
         ):
             self.icon_city_loading()
         self.inerror = False
-        self.systray.setIcon(QIcon(':/noicon'))
+        self.systray.setIcon(QIcon.fromTheme("image-loading", QIcon(':/noicon)')))
         self.systray.setToolTip(self.tr('Fetching weather data...'))
         self.city = self.settings.value('City') or ''
         self.id_ = self.settings.value('ID') or None
