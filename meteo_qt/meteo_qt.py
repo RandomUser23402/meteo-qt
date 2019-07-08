@@ -113,7 +113,7 @@ class SystemTrayIcon(QMainWindow):
         self.aboutAction = QAction(self.tr('&About'), self)
         self.exitAction = QAction(self.tr('Exit'), self)
         self.exitAction.setIcon(QIcon.fromTheme("application-exit", QIcon(':/exit')))
-        self.aboutAction.setIcon(QIcon.fromTheme("help-faq", QIcon(':/info')))
+        self.aboutAction.setIcon(QIcon.fromTheme("help-about", QIcon(':/info')))
         self.refreshAction.setIcon(QIcon.fromTheme("view-refresh", QIcon(':/refresh')))
         self.settingsAction.setIcon(QIcon.fromTheme("configure", QIcon(':/configure')))
         self.tempCityAction.setIcon(QIcon.fromTheme("applications-geography", QIcon(':/tempcity')))
