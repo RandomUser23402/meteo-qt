@@ -46,7 +46,7 @@ class MeteoSettings(QDialog):
         self.city_combo.currentIndexChanged.connect(self.city_default)
         self.city_title = QLabel(self.tr('City'))
         self.city_button = QPushButton()
-        self.city_button.setIcon(QIcon(':/configure'))
+        self.city_button.setIcon(QIcon.fromTheme("configure", QIcon(':/configure')))
         self.city_button.setToolTip(self.tr('Click to edit the cities list'))
         self.city_button.clicked.connect(self.edit_cities_list)
         # ------Language------------------------------
