@@ -70,6 +70,7 @@ class SystemTrayIcon(QMainWindow):
         self.temp_decimal_bool = self.settings.value('Decimal') or False
         # initialize the tray icon type in case of first run: issue#42
         self.tray_type = self.settings.value('TrayType') or 'icon&temp'
+        self.shaded_weather_icons = self.settings.value('ShadedIcons') or 'True'
         self.cond = conditions.WeatherConditions()
         self.temporary_city_status = False
         self.conditions = self.cond.trans
@@ -87,7 +88,10 @@ class SystemTrayIcon(QMainWindow):
         self.forecast6_url = (
             'http://api.openweathermap.org/data/2.5/forecast/daily?id='
         )
-        self.wIconUrl = 'http://openweathermap.org/img/w/'
+        if(self.shaded_weather_icons == 'True'):
+            self.wIconUrl = 'http://openweathermap.org/img/w/'
+        else:
+            self.wIconUrl = 'http://openweathermap.org/img/wn/'
         apikey = self.settings.value('APPID') or ''
         self.appid = '&APPID=' + apikey
         self.forecast_icon_url = self.wIconUrl
@@ -1725,6 +1729,7 @@ class SystemTrayIcon(QMainWindow):
         beaufort = self.settings.value('Beaufort')
         traycolor = self.settings.value('TrayColor')
         tray_type = self.settings.value('TrayType')
+        shaded_weather_icons = self.settings.value('ShadedIcons')
         fontsize = self.settings.value('FontSize')
         bold_set = self.settings.value('Bold')
         language = self.settings.value('Language')
@@ -1740,6 +1745,19 @@ class SystemTrayIcon(QMainWindow):
                 )
             )
             self.language = language
+        if (
+                shaded_weather_icons != self.shaded_weather_icons
+                and shaded_weather_icons is not None
+        ):
+            self.systray.showMessage(
+                'meteo-qt:',
+                QCoreApplication.translate(
+                    "System tray notification",
+                    "The application has to be restarted to apply the icon setting",
+                    ''
+                )
+            )
+            self.shaded_weather_icons = shaded_weather_icons
         # Check if update is needed
         if traycolor is None:
             traycolor = ''

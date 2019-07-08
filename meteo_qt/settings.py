@@ -222,6 +222,14 @@ class MeteoSettings(QDialog):
                                              (self.tray_dico[set_tray_icon]))
         self.tray_icon_combo.currentIndexChanged.connect(self.tray)
         self.tray_changed = False
+        # New (flat) or old (shaded) icon type
+        self.shaded_weather_icons_label = QLabel(self.tr('Use shaded weather icons'))
+        self.shaded_weather_icons_checkbox = QCheckBox()
+        shaded_weather_icons_bool = self.settings.value('ShadedIcons') or 'True'
+        shaded_weather_icons_bool = eval(shaded_weather_icons_bool)
+        self.shaded_weather_icons_checkbox.setChecked(shaded_weather_icons_bool)
+        self.shaded_weather_icons_checkbox.stateChanged.connect(self.shaded_weather_icons)
+        self.shaded_weather_icons_changed = False
         # Font size
         fontsize = self.settings.value('FontSize') or '18'
         self.fontsize_label = QLabel(QCoreApplication.translate(
@@ -329,17 +337,19 @@ class MeteoSettings(QDialog):
         self.panel.addWidget(self.notifier_checkbox, 7, 1)
         self.panel.addWidget(self.tray_icon_temp_label, 8, 0)
         self.panel.addWidget(self.tray_icon_combo, 8, 1)
-        self.panel.addWidget(self.fontsize_label, 9, 0)
-        self.panel.addWidget(self.fontsize_spinbox, 9, 1)
-        self.panel.addWidget(self.bold_checkbox, 9, 2)
-        self.panel.addWidget(self.proxy_label, 10, 0)
-        self.panel.addWidget(self.proxy_chbox, 10, 1)
-        self.panel.addWidget(self.proxy_button, 10, 2)
-        self.panel.addWidget(self.owmkey_label, 11, 0)
-        self.panel.addWidget(self.owmkey_text, 11, 1)
-        self.panel.addWidget(self.owmkey_create, 11, 2)
-        self.panel.addWidget(self.start_minimized_label, 12, 0)
-        self.panel.addWidget(self.start_minimized_chbx, 12, 1)
+        self.panel.addWidget(self.shaded_weather_icons_label, 9, 0)
+        self.panel.addWidget(self.shaded_weather_icons_checkbox, 9, 1)
+        self.panel.addWidget(self.fontsize_label, 10, 0)
+        self.panel.addWidget(self.fontsize_spinbox, 10, 1)
+        self.panel.addWidget(self.bold_checkbox, 10, 2)
+        self.panel.addWidget(self.proxy_label, 11, 0)
+        self.panel.addWidget(self.proxy_chbox, 11, 1)
+        self.panel.addWidget(self.proxy_button, 11, 2)
+        self.panel.addWidget(self.owmkey_label, 12, 0)
+        self.panel.addWidget(self.owmkey_text, 12, 1)
+        self.panel.addWidget(self.owmkey_create, 12, 2)
+        self.panel.addWidget(self.start_minimized_label, 13, 0)
+        self.panel.addWidget(self.start_minimized_chbx, 13, 1)
 
         self.layout.addLayout(self.panel)
         self.layout.addLayout(self.buttonLayout)
@@ -508,6 +518,18 @@ class MeteoSettings(QDialog):
             key for key, value in self.tray_dico.items() if value == tray
         ]
         self.settings.setValue('TrayType', settray[0])
+    
+    def shaded_weather_icons(self, state):
+        self.shaded_weather_icons_state = state
+        self.shaded_weather_icons_changed = True
+        self.buttonBox.button(QDialogButtonBox.Apply).setEnabled(True)
+
+    def shaded_weather_icons_apply(self):
+        if self.shaded_weather_icons_state == 2:
+            shaded_icons = 'True'
+        else:
+            shaded_icons = 'False'
+        self.settings.setValue('ShadedIcons', str(shaded_icons))
 
     def fontsize_change(self, size):
         self.fontsize_changed = True
@@ -653,6 +675,8 @@ class MeteoSettings(QDialog):
             self.notifier_apply()
         if self.tray_changed:
             self.tray_apply()
+        if self.shaded_weather_icons_changed:
+            self.shaded_weather_icons_apply()
         if self.fontsize_changed:
             self.fontsize_apply()
         if self.bold_changed:
