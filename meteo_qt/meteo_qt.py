@@ -1345,7 +1345,7 @@ class SystemTrayIcon(QMainWindow):
 
     def firsttime(self):
         self.temp = ''
-        self.wIcon = QPixmap(':/noicon')
+        self.wIcon = QIcon.fromTheme("system-warning", QIcon(':/noicon')).pixmap(QSize(48, 48))
         self.systray.showMessage(
             'meteo-qt:\n',
             self.tr('No city has been configured yet.')
@@ -1359,7 +1359,7 @@ class SystemTrayIcon(QMainWindow):
                 return
         logging.debug('Update...')
         self.icon_loading()
-        self.wIcon = QPixmap(':/noicon')
+        self.wIcon = QIcon.fromTheme("image-loading", QIcon(':/noicon')).pixmap(QSize(48, 48))
         self.downloadThread = Download(
             self.wIconUrl, self.baseurl, self.day_forecast_url,
             self.forecast6_url, self.id_, self.suffix
