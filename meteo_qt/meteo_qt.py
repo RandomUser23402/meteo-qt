@@ -23,8 +23,8 @@ import gc
 
 from PyQt5.QtCore import (
     PYQT_VERSION_STR, QT_VERSION_STR, QCoreApplication, QByteArray,
-    QLibraryInfo, QLocale, QSettings, Qt, QThread, QTimer, QTranslator,
-    pyqtSignal, pyqtSlot, QTime, QSize
+    QLibraryInfo, QLocale, QSettings, Qt, QSize, QThread, QTimer, QTranslator,
+    pyqtSignal, pyqtSlot, QTime
 )
 from PyQt5.QtGui import (
     QColor, QCursor, QFont, QIcon, QImage, QMovie, QPainter, QPixmap,
@@ -887,6 +887,18 @@ class SystemTrayIcon(QMainWindow):
         '''Next days forecast icons'''
         image = QImage()
         image.loadFromData(icon)
+        # Create a border to improve icon legibility
+        pt = QPainter()
+        pt.begin(image
+        mask = image.createAlphaMask()
+
+        mask.setColorTable([int('ffffffff',16),int('ff000000',16)])
+        mask_dims = mask.rect().size()
+        scale_factor = 1.1
+        mask = mask.scaled(
+                scale_factor*mask_dims.width(),
+                scale_factor*mask_dims.height()
+        )
         iconlabel = QLabel()
         iconlabel.setAlignment(Qt.AlignHCenter)
         iconpixmap = QPixmap(image)
